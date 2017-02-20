@@ -28,12 +28,17 @@
     };
 
     var send_chart_options = function send_chart_options(usage_logs) {
-        var series = {}, series_list;
+        var series = {}, series_list, last_rated;
 
         usage_logs.forEach(function (usage_log) {
             var info, timestamp, measureName;
 
             timestamp = Date.parse(usage_log.date);
+
+            if (usage_log.status == 'Rated') {
+                last_rated = timestamp;
+            }
+
             info = {};
 
             usage_log.usageCharacteristic.forEach(function (entry) {
@@ -85,6 +90,14 @@
             },
             series: series_list
         };
+
+        if (last_rated) {
+            options.xAxis.plotLines = [{
+                color: 'red',
+                value: last_rated,
+                width: 2
+            }]
+        }
 
         MP.wiring.pushEvent('chart-options', JSON.stringify(options));
     };
