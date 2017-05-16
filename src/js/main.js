@@ -2,7 +2,7 @@
  * bae-statistics-chart-generator
  * https://github.com/aarranz/bae-statistics-chart-generator-operator
  *
- * Copyright (c) 2016 CoNWeT Lab., Universidad Politécnica de Madrid
+ * Copyright (c) 2017 CoNWeT Lab., Universidad Politécnica de Madrid
  * Licensed under the Apache2 license.
  */
 
@@ -15,7 +15,8 @@
     var unit_measure_mapping = {
         'megabyte': 'Downloads',
         'millisecond': 'Usage',
-        'call': 'API calls'
+        'call': 'API calls',
+        'api call': 'API calls'
     };
 
     var parse_query = function parse_query(location) {
@@ -111,7 +112,8 @@
 	        "Authorization": "Bearer " + params.token
 	    },
         parameters: {
-            "usageCharacteristic.value": params.productId,
+            "usageCharacteristic.productId": params.productId,
+            "usageCharacteristic.orderId": params.orderId,
             "status": "Guided,Rated"
         },
         onSuccess: function (response) {
