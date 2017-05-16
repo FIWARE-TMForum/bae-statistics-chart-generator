@@ -29,7 +29,11 @@
     };
 
     var send_chart_options = function send_chart_options(usage_logs) {
-        var series = {}, series_list, last_rated;
+        var series = {}, series_list, last_rated, last_date, value;
+
+        if (usage_logs.length) {
+            last_date = Date.parse(usage_logs[0].date);
+        }
 
         usage_logs.forEach(function (usage_log) {
             var info, timestamp, measureName;
@@ -56,7 +60,17 @@
                     data: []
                 };
             }
-            series[measureName].data.push([timestamp, parseFloat(info.value)]);
+
+            // Aggregate accounting info with the same timestamp
+            if (timestamp == last_date && series[measureName].data.length) {
+                var entry = series[measureName].data.pop();
+                value = entry[1] + parseFloat(info.value);
+            } else {
+                value = parseFloat(info.value);
+            }
+
+            series[measureName].data.push([timestamp, value]);
+            last_date = timestamp;
         });
 
         // Sort series
